@@ -1,0 +1,96 @@
+class MyHashSet {
+
+    private boolean[] set;
+
+    public MyHashSet() {
+        set = new boolean[1000001];
+    }
+
+    public void add(int key) {
+        set[key] = true;
+    }
+
+    public void remove(int key) {
+        set[key] = false;
+    }
+
+    public boolean contains(int key) {
+        return set[key];
+    }
+}
+
+OUTPUT:
+
+
+Input
+["MyHashSet","add","add","add","remove","contains","add","add","add","remove","contains","add","add","add","remove","contains","add","add","add","remove","contains"]
+[[],[1],[10001],[1],[1],[1],[7],[10007],[7],[7],[7],[123],[10123],[123],[123],[123],[5000],[15000],[5000],[5000],[5000]]
+Output
+[null,null,null,null,null,false,null,null,null,null,false,null,null,null,null,false,null,null,null,null,false]
+Expected
+[null,null,null,null,null,false,null,null,null,null,false,null,null,null,null,false,null,null,null,null,false]
+
+
+
+
+import java.util.*;
+
+public class Solution {
+
+    public static List<Integer> gradingStudents(List<Integer> grades) {
+        List<Integer> result = new ArrayList<>();
+
+        for (int grade : grades) {
+            // Failing grades are not rounded
+            if (grade < 38) {
+                result.add(grade);
+            } else {
+                // Find the next multiple of 5
+                int nextMultiple = ((grade / 5) + 1) * 5;
+
+                // Round if difference is less than 3
+                if (nextMultiple - grade < 3) {
+                    result.add(nextMultiple);
+                } else {
+                    result.add(grade);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        List<Integer> grades = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            grades.add(sc.nextInt());
+        }
+
+        List<Integer> result = gradingStudents(grades);
+
+        for (int grade : result) {
+            System.out.println(grade);
+        }
+
+        sc.close();
+    }
+}
+
+OUTPUT:
+
+
+Input (stdin)
+4
+73
+67
+38
+33
+Expected Output
+75
+67
+40
+33

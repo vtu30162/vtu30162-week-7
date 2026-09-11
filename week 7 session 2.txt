@@ -1,0 +1,126 @@
+import java.util.HashMap;
+import java.util.Map;
+
+class UndergroundSystem {
+
+    // Stores check-in information for each customer
+    private Map<Integer, CheckInData> checkIns;
+
+    // Stores total travel time and number of trips for each route
+    private Map<String, RouteData> routes;
+
+    // Class to store customer's check-in station and time
+    static class CheckInData {
+        String station;
+        int time;
+
+        CheckInData(String station, int time) {
+            this.station = station;
+            this.time = time;
+        }
+    }
+
+    // Class to store total time and number of trips
+    static class RouteData {
+        double totalTime;
+        int count;
+
+        RouteData() {
+            totalTime = 0;
+            count = 0;
+        }
+    }
+
+    public UndergroundSystem() {
+        checkIns = new HashMap<>();
+        routes = new HashMap<>();
+    }
+
+    public void checkIn(int id, String stationName, int t) {
+        checkIns.put(id, new CheckInData(stationName, t));
+    }
+
+    public void checkOut(int id, String stationName, int t) {
+        CheckInData data = checkIns.get(id);
+
+        String route = data.station + "#" + stationName;
+        int travelTime = t - data.time;
+
+        if (!routes.containsKey(route)) {
+            routes.put(route, new RouteData());
+        }
+
+        RouteData routeData = routes.get(route);
+        routeData.totalTime += travelTime;
+        routeData.count++;
+
+        checkIns.remove(id);
+    }
+
+    public double getAverageTime(String startStation, String endStation) {
+        String route = startStation + "#" + endStation;
+
+        RouteData routeData = routes.get(route);
+
+        return routeData.totalTime / routeData.count;
+    }
+}
+
+
+OUTPUT:
+
+Input
+["UndergroundSystem","checkIn","checkIn","checkIn","checkOut","checkOut","checkOut","getAverageTime","getAverageTime","checkIn","getAverageTime","checkOut","getAverageTime"]
+[[],[45,"Leyton",3],[32,"Paradise",8],[27,"Leyton",10],[45,"Waterloo",15],[27,"Waterloo",20],[32,"Cambridge",22],["Paradise","Cambridge"],["Leyton","Waterloo"],[10,"Leyton",24],["Leyton","Waterloo"],[10,"Waterloo",38],["Leyton","Waterloo"]]
+Output
+[null,null,null,null,null,null,null,14.00000,11.00000,null,11.00000,null,12.00000]
+Expected
+[null,null,null,null,null,null,null,14.00000,11.00000,null,11.00000,null,12.00000]
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+class BrowserHistory {
+
+    private List<String> history;
+    private int current;
+
+    public BrowserHistory(String homepage) {
+        history = new ArrayList<>();
+        history.add(homepage);
+        current = 0;
+    }
+
+    public void visit(String url) {
+        // Remove all forward history
+        while (history.size() > current + 1) {
+            history.remove(history.size() - 1);
+        }
+
+        history.add(url);
+        current++;
+    }
+
+    public String back(int steps) {
+        current = Math.max(0, current - steps);
+        return history.get(current);
+    }
+
+    public String forward(int steps) {
+        current = Math.min(history.size() - 1, current + steps);
+        return history.get(current);
+    }
+}
+
+
+OUTPUT:
+
+
+Input
+["BrowserHistory","visit","visit","visit","back","back","forward","visit","forward","back","back"]
+[["leetcode.com"],["google.com"],["facebook.com"],["youtube.com"],[1],[1],[1],["linkedin.com"],[2],[2],[7]]
+Output
+[null,null,null,null,"facebook.com","google.com","facebook.com",null,"linkedin.com","google.com","leetcode.com"]
+Expected
+[null,null,null,null,"facebook.com","google.com","facebook.com",null,"linkedin.com","google.com","leetcode.com"]
